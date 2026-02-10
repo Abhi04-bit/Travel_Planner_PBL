@@ -1,20 +1,3 @@
-// const express = require("express");
-// const app = express();
-
-// app.use(express.json());
-
-// // 👇 THIS LINE IS CRITICAL
-// const destinationRoutes = require("./routes/destination.routes");
-
-
-// app.get("/", (req, res) => {
-//   res.send("Travel Planner Backend Running 🚀");
-// });
-
-// module.exports = app;
-
-
-//second
 const express = require("express");
 const app = express();
 const cors = require("cors");
