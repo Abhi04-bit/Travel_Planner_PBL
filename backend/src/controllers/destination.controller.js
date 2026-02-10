@@ -1,46 +1,31 @@
 const Destination = require("../models/destination.model");
 
-exports.getDestination = async (req, res) => {
-  try {
-    const destinationName = req.params.name.toLowerCase();
+// GET all destinations
+exports.getAllDestinations = async (req, res) => {
+  const destinations = await Destination.find();
 
-    // 1️⃣ Check DB first (CACHE)
-    const cachedDestination = await Destination.findOne({
-      name: destinationName
-    });
+  res.status(200).json({
+    success: true,
+    count: destinations.length,
+    destinations
+  });
+};
 
-    if (cachedDestination) {
-      return res.json({
-        source: "cache",
-        data: cachedDestination
-      });
-    }
+// GET destination by city
+exports.getDestinationByCity = async (req, res) => {
+  const city = req.params.city.toLowerCase();
 
-    // 2️⃣ If not found, fetch from APIs (mock for now)
-    const fetchedData = {
-      name: destinationName,
-      state: "Unknown",
-      overview: `Discover the beauty of ${destinationName}`,
-      bestMonths: ["October", "November", "December"],
-      avoidMonths: ["May", "June"],
-      hotels: [],
-      attractions: [],
-      weather: {},
-      itinerary: {}
-    };
+  const destination = await Destination.findOne({ name: city });
 
-    // 3️⃣ Save to DB
-    const newDestination = await Destination.create(fetchedData);
-
-    return res.json({
-      source: "api",
-      data: newDestination
-    });
-
-  } catch (error) {
-    res.status(500).json({
-      message: "Failed to fetch destination",
-      error: error.message
+  if (!destination) {
+    return res.status(404).json({
+      success: false,
+      message: "Destination not found"
     });
   }
+
+  res.status(200).json({
+    success: true,
+    destination
+  });
 };
